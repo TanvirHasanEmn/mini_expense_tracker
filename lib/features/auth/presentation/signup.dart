@@ -6,17 +6,28 @@ import '../../../core/custom_widgets/custom_button.dart';
 import '../../../core/custom_widgets/custom_text_field.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_routes.dart';
-import '../controller/signin_controller.dart';
 import 'package:go_router/go_router.dart';
+import '../controller/signup_controller.dart';
 
-class SigninPage extends ConsumerWidget {
-  const SigninPage({super.key});
+class SignupPage extends ConsumerWidget {
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(signinControllerProvider);
-    final controller = ref.read(signinControllerProvider.notifier);
-
+    final state = ref.watch(signupControllerProvider);
+    final controller = ref.read(signupControllerProvider.notifier);
+    ref.listen(signupControllerProvider, (previous, next) {
+      if (next.generalError != null && next.generalError != previous?.generalError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.generalError!),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+      if (next.isSuccess) {
+      }
+    });
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -27,7 +38,6 @@ class SigninPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 50.verticalSpace,
                 Text(
                   "WELCOME TO\nMINI EXPENSE TRACKER",
@@ -40,17 +50,24 @@ class SigninPage extends ConsumerWidget {
                 ),
 
                 30.verticalSpace,
-
                 Text(
-                  "LOGIN TO YOUR ACCOUNT",
+                  "Create Your Account",
                   style: GoogleFonts.inter(
-                    fontSize: 16.sp,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColor.lightGray,
+                    color: Colors.white,
                   ),
                 ),
-                80.verticalSpace,
+                30.verticalSpace,
 
+                CustomTextField(
+                  controller: controller.nameController,
+                  hintText: "Name",
+                  prefixIcon: Icons.person,
+                  keyboardType: TextInputType.name,
+                  errorText: state.nameError,
+                ),
+                16.verticalSpace,
 
                 CustomTextField(
                   controller: controller.emailController,
@@ -78,23 +95,23 @@ class SigninPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-
                 30.verticalSpace,
+
                 CustomButton(
-                  text: state.isLoading ? "Signing in..." : "Sign in",
-                  onPressed: state.isLoading ? null : controller.login,
+                  text: state.isLoading ? "Creating account..." : "Sign up",
+                  onPressed: state.isLoading ? null : controller.register,
                 ),
+                30.verticalSpace,
 
 
                 50.verticalSpace,
 
-
                 Center(
                   child: InkWell(
-                    onTap: () => context.push(AppRoutes.signup),
+                    onTap: () => context.push(AppRoutes.signin),
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Already have an account? ",
                         style: GoogleFonts.inter(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
@@ -102,7 +119,7 @@ class SigninPage extends ConsumerWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: "Sign up",
+                            text: "Sign in",
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                               fontSize: 16.sp,

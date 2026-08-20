@@ -12,5 +12,18 @@ class AuthRepository {
     await Future.delayed(const Duration(seconds: 1));
   }
 
-
+  /// Register new user with name, email, and password
+  Future<void> signUpWithEmailPassword({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    // Firebase implementation:
+    // final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    //   email: email,
+    //   password: password,
+    // );
+    // await credential.user?.updateDisplayName(name);
+    await Future.delayed(const Duration(seconds: 1)); // Mock delay
+  }
 }
