@@ -76,7 +76,7 @@ class ExpenseListPage extends ConsumerWidget {
     );
 
     return Scaffold(
-      backgroundColor: AppColor.darkGray,
+      backgroundColor: AppColor.black,
       appBar: AppBar(
         title: Text(
           'All Expenses',
@@ -87,7 +87,7 @@ class ExpenseListPage extends ConsumerWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: AppColor.darkGray,
+        backgroundColor: AppColor.black,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => context.pop(),

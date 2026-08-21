@@ -5,6 +5,6 @@ class ImagePath {
 
   //*icons path
   static const String logout_icon = '${assets}logout_icon.png';
-  static const String profile = '${assets}profile';
+  static const String profile = '${assets}profile.png';
 
 }
