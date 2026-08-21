@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mini_expense_tracker/core/utils/app_colors.dart';
 
 import '../../../core/utils/app_routes.dart';
+import '../../../core/utils/image_paths.dart';
 import '../controller/profile_controller.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -28,13 +30,13 @@ class ProfilePage extends ConsumerWidget {
                   20.verticalSpace,
                   GestureDetector(
                     onTap: () => Navigator.of(context).maybePop(),
-                    child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+                    child: Icon(Icons.arrow_back, color: AppColor.white, size: 24.sp),
                   ),
                   110.horizontalSpace,
                   Text(
                     'PROFILE',
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: AppColor.white,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                     ),
@@ -49,13 +51,13 @@ class ProfilePage extends ConsumerWidget {
                   children: [
                     CircleAvatar(
                       radius: 32.r,
-                      backgroundImage: AssetImage("assets/icons/profile.png"),
+                      backgroundImage: AssetImage(ImagePath.profile),
                     ),
                     Positioned(
                       right: 0,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0x80C4FE01),
+                          color: AppColor.primary,
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                       ),
@@ -68,7 +70,7 @@ class ProfilePage extends ConsumerWidget {
               Text(
                 state.name,
                 style: GoogleFonts.inter(
-                  color: Colors.white,
+                  color: AppColor.white,
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                 ),
@@ -95,7 +97,7 @@ class ProfilePage extends ConsumerWidget {
                   Text(
                     "${state.dateTime.day.toString().padLeft(2, '0')}/${state.dateTime.month.toString().padLeft(2, '0')}/${state.dateTime.year}",
                     style: GoogleFonts.inter(
-                      color: Colors.white,
+                      color: AppColor.white,
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
@@ -105,7 +107,7 @@ class ProfilePage extends ConsumerWidget {
               64.verticalSpace,
 
               _buildOption(
-                imagePath: 'assets/icons/logout_icon.png',
+                imagePath: ImagePath.logout_icon,
                 text: 'Logout',
                 onTap: () async {
                   // await controller.logout();
@@ -137,7 +139,7 @@ class ProfilePage extends ConsumerWidget {
       title: Text(
         text,
         style: GoogleFonts.inter(
-          color: Colors.white,
+          color: AppColor.white,
           fontSize: 24.sp,
           fontWeight: FontWeight.w500,
         ),

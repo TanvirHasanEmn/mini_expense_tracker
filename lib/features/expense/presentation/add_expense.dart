@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/custom_widgets/custom_button.dart';
+import '../../../core/utils/app_colors.dart';
 import '../controller/add_expense_controller.dart';
 
 class AddExpensePage extends ConsumerWidget {
@@ -20,10 +21,10 @@ class AddExpensePage extends ConsumerWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFC4FE01),
-              onPrimary: Colors.black,
+              primary: AppColor.primary,
+              onPrimary: AppColor.black,
               surface: Color(0xFF1E1E1E),
-              onSurface: Colors.white,
+              onSurface: AppColor.white,
             ),
           ),
           child: child!,
@@ -46,7 +47,7 @@ class AddExpensePage extends ConsumerWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.generalError!),
-            backgroundColor: Colors.redAccent,
+            backgroundColor: AppColor.usRed,
           ),
         );
       }
@@ -59,22 +60,22 @@ class AddExpensePage extends ConsumerWidget {
         "${state.selectedDate?.day.toString().padLeft(2, '0')}/${state.selectedDate?.month.toString().padLeft(2, '0')}/${state.selectedDate?.year}";
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColor.black,
       appBar: AppBar(
         title: Text(
           'Add Expense',
           style: GoogleFonts.inter(
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: AppColor.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: AppColor.black,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => context.pop(),
-          child: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+          child: Icon(Icons.arrow_back, color: AppColor.white, size: 24.sp),
         ),
       ),
       body: SingleChildScrollView(
@@ -87,7 +88,7 @@ class AddExpensePage extends ConsumerWidget {
             TextField(
               controller: controller.amountController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.white),
+              style: GoogleFonts.inter(fontSize: 15.sp, color: AppColor.white),
               decoration: _inputDecoration('e.g. 500', errorText: state.amountError),
             ),
             16.verticalSpace,
@@ -98,7 +99,7 @@ class AddExpensePage extends ConsumerWidget {
               hint: Text(
                 'Select Category',
                 style: GoogleFonts.inter(
-                  color: Colors.grey.shade500,
+                  color:AppColor.lightGray,
                   fontSize: 14.sp,
                 ),
               ),
@@ -109,7 +110,7 @@ class AddExpensePage extends ConsumerWidget {
                     category,
                     style: GoogleFonts.inter(
                       fontSize: 15.sp,
-                      color: Colors.white,
+                      color: AppColor.white,
                     ),
                   ),
                 );
@@ -120,12 +121,12 @@ class AddExpensePage extends ConsumerWidget {
               dropdownColor: const Color(0xFF1E1E1E),
               icon: Icon(
                 Icons.arrow_drop_down,
-                color: const Color(0xFFC4FE01),
+                color: AppColor.primary,
                 size: 24.sp,
               ),
               style: GoogleFonts.inter(
                 fontSize: 15.sp,
-                color: Colors.white,
+                color: AppColor.white,
               ),
               decoration: _inputDecoration(
                 '',
@@ -144,10 +145,10 @@ class AddExpensePage extends ConsumerWidget {
                     height: 54.h,
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC4FE01).withValues(alpha: 0.15),
+                      color:AppColor.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(100.r),
                       border: Border.all(
-                        color: state.dateError != null ? Colors.redAccent : const Color(0xFFC4FE01),
+                        color: state.dateError != null ? AppColor.usRed : AppColor.primary,
                       ),
                     ),
                     child: Row(
@@ -159,12 +160,12 @@ class AddExpensePage extends ConsumerWidget {
                               : "Select Date",
                           style: GoogleFonts.inter(
                             fontSize: 15.sp,
-                            color: Colors.white,
+                            color: AppColor.white,
                           ),
                         ),
                         Icon(
                           Icons.calendar_month_rounded,
-                          color: const Color(0xFFC4FE01),
+                          color: AppColor.primary,
                           size: 20.sp,
                         ),
                       ],
@@ -176,7 +177,7 @@ class AddExpensePage extends ConsumerWidget {
                       padding: EdgeInsets.only(left: 16.w),
                       child: Text(
                         state.dateError!,
-                        style: GoogleFonts.inter(color: Colors.redAccent, fontSize: 12.sp),
+                        style: GoogleFonts.inter(color: AppColor.usRed, fontSize: 12.sp),
                       ),
                     ),
                   ],
@@ -191,24 +192,24 @@ class AddExpensePage extends ConsumerWidget {
               controller: controller.noteController,
               maxLines: 4,
               keyboardType: TextInputType.multiline,
-              style: GoogleFonts.inter(fontSize: 15.sp, color: Colors.white),
+              style: GoogleFonts.inter(fontSize: 15.sp, color: AppColor.white),
               decoration: InputDecoration(
                 hintText: 'Type any details or notes here...',
                 hintStyle: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 14.sp),
                 filled: true,
-                fillColor: const Color(0xFFC4FE01).withValues(alpha: 0.15),
+                fillColor: AppColor.primary.withValues(alpha: 0.15),
                 contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.r),
-                  borderSide: const BorderSide(color: Color(0xFFC4FE01)),
+                  borderSide: const BorderSide(color:AppColor.primary),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.r),
-                  borderSide: const BorderSide(color: Color(0xFFC4FE01), width: 1.5),
+                  borderSide: const BorderSide(color: AppColor.primary, width: 1.5),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.r),
-                  borderSide: const BorderSide(color: Color(0xFFC4FE01)),
+                  borderSide: const BorderSide(color: AppColor.primary),
                 ),
               ),
             ),
@@ -230,7 +231,7 @@ class AddExpensePage extends ConsumerWidget {
       style: GoogleFonts.inter(
         fontSize: 14.sp,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: AppColor.white,
       ),
     );
   }
@@ -238,23 +239,23 @@ class AddExpensePage extends ConsumerWidget {
   InputDecoration _inputDecoration(String hintText, {String? errorText}) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 14.sp),
+      hintStyle: GoogleFonts.inter(color: AppColor.lightGray, fontSize: 14.sp),
       errorText: errorText,
-      errorStyle: GoogleFonts.inter(color: Colors.redAccent, fontSize: 12.sp),
+      errorStyle: GoogleFonts.inter(color:AppColor.usRed, fontSize: 12.sp),
       filled: true,
-      fillColor: const Color(0xFFC4FE01).withValues(alpha: 0.15),
+      fillColor: AppColor.primary.withValues(alpha: 0.15),
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(100.r),
-        borderSide: const BorderSide(color: Color(0xFFC4FE01)),
+        borderSide: const BorderSide(color: AppColor.primary),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(100.r),
-        borderSide: const BorderSide(color: Color(0xFFC4FE01), width: 1.5),
+        borderSide: const BorderSide(color: AppColor.primary, width: 1.5),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(100.r),
-        borderSide: const BorderSide(color: Color(0xFFC4FE01)),
+        borderSide: const BorderSide(color:AppColor.primary),
       ),
     );
   }

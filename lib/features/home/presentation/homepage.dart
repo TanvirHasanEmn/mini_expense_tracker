@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/image_paths.dart';
 import '../../expense/presentation/widgets/expense_details_widget.dart';
 import '../controller/home_controller.dart';
 
@@ -59,7 +60,7 @@ class HomePage extends ConsumerWidget {
                               radius: 18.r,
                               backgroundColor: AppColor.primary,
                               backgroundImage:
-                              const AssetImage('assets/icons/profile.png'),
+                              const AssetImage(ImagePath.profile),
                             ),
                             4.verticalSpace,
                             Text(
