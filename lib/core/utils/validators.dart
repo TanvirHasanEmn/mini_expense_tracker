@@ -17,8 +17,7 @@ class AppValidators {
     return null;
   }
 
-
-  //* password validator
+  //* Password validator
   static String? validateStrongPassword(String? value) {
     if (value == null || value.isEmpty) {
       return "Password cannot be empty";
@@ -35,13 +34,44 @@ class AppValidators {
     return null;
   }
 
-//* name validator
+  //* Name validator
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Name cannot be empty";
     }
     if (value.trim().length < 2) {
       return "Name must be at least 2 characters";
+    }
+    return null;
+  }
+
+  //* Expense Amount validator
+  static String? validateAmount(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Amount is required";
+    }
+    final amount = double.tryParse(value.trim());
+    if (amount == null) {
+      return "Enter a valid number";
+    }
+    if (amount <= 0) {
+      return "Amount must be greater than 0";
+    }
+    return null;
+  }
+
+  //* Expense Category validator
+  static String? validateCategory(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Please select a category";
+    }
+    return null;
+  }
+
+  //* Expense Date validator
+  static String? validateDate(DateTime? value) {
+    if (value == null) {
+      return "Date is required";
     }
     return null;
   }
