@@ -18,6 +18,12 @@ class SigninPage extends ConsumerWidget {
     final controller = ref.read(signinControllerProvider.notifier);
 
 
+    ref.listen(signinControllerProvider, (previous, next) {
+      if (next.isSuccess && !(previous?.isSuccess ?? false)) {
+        context.go(AppRoutes.home);
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -81,6 +87,7 @@ class SigninPage extends ConsumerWidget {
 
                 30.verticalSpace,
                 CustomButton(
+
                   text: state.isLoading ? "Signing in..." : "Sign in",
                   onPressed: state.isLoading ? null : controller.login,
                 ),

@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mini_expense_tracker/features/profile/presentation/profile.dart';
 import '../../../features/auth/presentation/signin.dart';
 import '../../../features/auth/presentation/signup.dart';
+import '../../features/home/presentation/homepage.dart';
 
 class AppRoutes {
   AppRoutes._();
@@ -10,6 +12,7 @@ class AppRoutes {
   static const String signin = '/signin';
   static const String signup = '/signup';
   static const String home = '/home';
+  static const String profile = '/profile';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -30,6 +33,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.signup,
         name: 'signup',
         builder: (context, state) => const SignupPage(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.home,
+        name: 'home',
+        builder: (context, state) => const HomePage()
+      ),
+
+      GoRoute(
+          path: AppRoutes.profile,
+          name: 'profile',
+          builder: (context, state) => const ProfilePage()
       ),
     ],
   );
