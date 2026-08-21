@@ -5,6 +5,7 @@ import '../../../features/auth/presentation/signin.dart';
 import '../../../features/auth/presentation/signup.dart';
 import '../../features/expense/presentation/add_expense.dart';
 import '../../features/expense/presentation/edit_expenses.dart';
+import '../../features/expense/presentation/expense_list.dart';
 import '../../features/home/presentation/homepage.dart';
 
 class AppRoutes {
@@ -15,6 +16,8 @@ class AppRoutes {
   static const String signup = '/signup';
   static const String home = '/home';
   static const String add_expense = '/add_expense';
+  static const String edit_expense = '/edit_expense';
+  static const String expense_list = '/expense_list';
   static const String profile = '/profile';
 }
 
@@ -47,9 +50,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: AppRoutes.add_expense,
           name: 'add_expense',
+          builder: (context, state) => const AddExpensePage()
+      ),
+      GoRoute(
+          path: AppRoutes.edit_expense,
+          name: 'edit_expense',
           builder: (context, state) => const EditExpensePage(expenseData: {},)
       ),
-
+      GoRoute(
+          path: AppRoutes.expense_list,
+          name: 'expense_list',
+          builder: (context, state) => const ExpenseListPage()
+      ),
       GoRoute(
           path: AppRoutes.profile,
           name: 'profile',
