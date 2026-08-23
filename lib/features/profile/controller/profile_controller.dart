@@ -11,14 +11,40 @@ StateNotifierProvider.autoDispose<ProfileController, ProfileState>((ref) {
 class ProfileController extends StateNotifier<ProfileState> {
   final AuthRepository _authRepository;
 
-  ProfileController(this._authRepository) : super(ProfileState());
+  ProfileController(this._authRepository) : super(ProfileState()) {
+    _fetchUserProfile();
+  }
 
-  // Future<void> logout() async {
-  //   state = state.copyWith(isLoggingOut: true);
-  //   try {
-  //     await _authRepository.signOut();
-  //   } finally {
-  //     state = state.copyWith(isLoggingOut: false);
-  //   }
-  // }
+  Future<void> _fetchUserProfile() async {
+    final currentUser = _authRepository.currentUser;
+    if (currentUser == null) {
+      state = state.copyWith(isLoading: false);
+      return;
+    }
+
+    try {
+      final userProfile = await _authRepository.getUserProfile(currentUser.uid);
+      if (userProfile != null) {
+        state = state.copyWith(
+          name: userProfile.name,
+          email: userProfile.email,
+          dateTime: userProfile.createdAt,
+          isLoading: false,
+        );
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> logout() async {
+    state = state.copyWith(isLoggingOut: true);
+    try {
+      await _authRepository.logout();
+    } finally {
+      state = state.copyWith(isLoggingOut: false);
+    }
+  }
 }

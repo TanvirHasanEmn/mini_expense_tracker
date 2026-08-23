@@ -5,57 +5,77 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mini_expense_tracker/core/utils/app_colors.dart';
 
-import '../../../core/utils/app_routes.dart';
 import '../../../core/utils/image_paths.dart';
 import '../controller/profile_controller.dart';
+import 'logout_bottomsheet.dart';
+
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
+  void _showLogoutBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const LogoutBottomSheetContent(),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileControllerProvider);
-    final controller = ref.read(profileControllerProvider.notifier);
 
     return Scaffold(
       backgroundColor: const Color(0xFF101010),
       body: SafeArea(
-        child: Padding(
+        child: state.isLoading
+            ? const Center(
+          child: CircularProgressIndicator(color: AppColor.primary),
+        )
+            : Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
-         crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
                   20.verticalSpace,
                   GestureDetector(
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: Icon(Icons.arrow_back, color: AppColor.white, size: 24.sp),
+                    onTap: () => context.pop(),
+                    child: Icon(Icons.arrow_back,
+                        color: AppColor.white, size: 24.sp),
                   ),
-                  110.horizontalSpace,
-                  Text(
-                    'PROFILE',
-                    style: GoogleFonts.inter(
-                      color: AppColor.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'PROFILE',
+                        style: GoogleFonts.inter(
+                          color: AppColor.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
+                  24.horizontalSpace,
                 ],
               ),
               30.verticalSpace,
-
               Center(
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
                     CircleAvatar(
                       radius: 32.r,
-                      backgroundImage: AssetImage(ImagePath.profile),
+                      backgroundImage:
+                      const AssetImage(ImagePath.profile),
                     ),
                     Positioned(
                       right: 0,
                       child: Container(
+                        height: 12.h,
+                        width: 12.w,
                         decoration: BoxDecoration(
                           color: AppColor.primary,
                           borderRadius: BorderRadius.circular(6.r),
@@ -66,7 +86,6 @@ class ProfilePage extends ConsumerWidget {
                 ),
               ),
               15.verticalSpace,
-
               Text(
                 state.name,
                 style: GoogleFonts.inter(
@@ -76,45 +95,40 @@ class ProfilePage extends ConsumerWidget {
                 ),
               ),
               8.verticalSpace,
-                  Text(
-                    state.email,
-                    style: GoogleFonts.inter(
-                      color: Colors.grey,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-              16.verticalSpace,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Date of creation: ",
-                    style: GoogleFonts.inter(
-                      color: Colors.grey,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  Text(
-                    "${state.dateTime.day.toString().padLeft(2, '0')}/${state.dateTime.month.toString().padLeft(2, '0')}/${state.dateTime.year}",
-                    style: GoogleFonts.inter(
-                      color: AppColor.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+              Text(
+                state.email,
+                style: GoogleFonts.inter(
+                  color: Colors.grey,
+                  fontSize: 16.sp,
+                ),
               ),
+              16.verticalSpace,
+              if (state.dateTime != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Date of creation: ",
+                      style: GoogleFonts.inter(
+                        color: Colors.grey,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                    Text(
+                      "${state.dateTime!.day.toString().padLeft(2, '0')}/${state.dateTime!.month.toString().padLeft(2, '0')}/${state.dateTime!.year}",
+                      style: GoogleFonts.inter(
+                        color: AppColor.white,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               64.verticalSpace,
-
               _buildOption(
                 imagePath: ImagePath.logout_icon,
                 text: 'Logout',
-                onTap: () async {
-                  // await controller.logout();
-                  if (context.mounted) {
-                    context.go(AppRoutes.signin);
-                  }
-                },
+                onTap: () => _showLogoutBottomSheet(context),
               ),
             ],
           ),

@@ -6,28 +6,87 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/image_paths.dart';
+import '../../expense/domain/expense_repo.dart';
 import '../../expense/presentation/widgets/expense_details_widget.dart';
 import '../controller/home_controller.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
+  void _showDeleteDialog(BuildContext context, WidgetRef ref, String expenseId) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: const Color(0xFF1E1E1E),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+          side: const BorderSide(color: Color(0xFF333333)),
+        ),
+        title: Text(
+          'Delete Expense',
+          style: GoogleFonts.inter(
+            color: AppColor.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to delete this expense record?',
+          style: GoogleFonts.inter(
+            color: AppColor.lightGray,
+            fontSize: 14.sp,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(color: AppColor.lightGray, fontSize: 14.sp),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(dialogContext).pop();
+              try {
+                await ref.read(expenseRepositoryProvider).deleteExpense(expenseId);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Expense deleted'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to delete expense'),
+                      backgroundColor: AppColor.usRed,
+                    ),
+                  );
+                }
+              }
+            },
+            child: Text(
+              'Delete',
+              style: GoogleFonts.inter(
+                color: AppColor.usRed,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeControllerProvider);
-    final controller = ref.read(homeControllerProvider.notifier);
-
-    final recentExpenses = List.generate(
-      5,
-          (index) => {
-        'id': 'exp_$index',
-        'amount': (index + 1) * 320.0,
-        'category': index % 2 == 0 ? 'Bills & Utilities' : 'Food & Dining',
-        'note': 'Sample note for recent expense item',
-        'createdAt': DateTime.now().subtract(Duration(hours: index * 4)),
-        'updatedAt': null,
-      },
-    );
+    final expensesAsync = ref.watch(expensesStreamProvider);
 
     return Scaffold(
       backgroundColor: AppColor.bgColor,
@@ -85,7 +144,9 @@ class HomePage extends ConsumerWidget {
                       color: AppColor.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
-                          color: AppColor.primary, width: 1.w),
+                        color: AppColor.primary,
+                        width: 1.w,
+                      ),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,12 +164,12 @@ class HomePage extends ConsumerWidget {
                         14.verticalSpace,
                         _buildExpenseSummaryRow(
                           label: 'Your Monthly Expense',
-                          amount: 'TK. 14,500.00',
+                          amount: 'TK. ${state.monthlyExpense.toStringAsFixed(2)}',
                         ),
                         10.verticalSpace,
                         _buildExpenseSummaryRow(
                           label: 'Your Total Expense',
-                          amount: 'TK. 58,200.00',
+                          amount: 'TK. ${state.totalExpense.toStringAsFixed(2)}',
                         ),
                       ],
                     ),
@@ -145,33 +206,67 @@ class HomePage extends ConsumerWidget {
               ),
             ),
             Expanded(
-              child: recentExpenses.isEmpty
-                  ? Center(
-                child: Text(
-                  'No expenses added yet',
-                  style: GoogleFonts.inter(
-                    color: AppColor.lightGray,
-                    fontSize: 14.sp,
+              child: expensesAsync.when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: AppColor.primary),
+                ),
+                error: (_, __) => Center(
+                  child: Text(
+                    'Failed to load expenses',
+                    style: GoogleFonts.inter(
+                      color: AppColor.usRed,
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ),
-              )
-                  : ListView.separated(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 16.w, vertical: 6.h),
-                itemCount: recentExpenses.length,
-                separatorBuilder: (_, __) => 12.verticalSpace,
-                itemBuilder: (context, index) {
-                  final item = recentExpenses[index];
-                  return ExpenseDetailsWidget(
-                    amount: item['amount'] as double,
-                    category: item['category'] as String,
-                    note: item['note'] as String?,
-                    createdAt: item['createdAt'] as DateTime,
-                    updatedAt: item['updatedAt'] as DateTime?,
-                    onEdit: () {
-                      context.push('/edit_expense', extra: item);
-                    },
-                    onDelete: () {
+                data: (expenses) {
+                  // Display only the 5 most recent records on the dashboard
+                  final recentExpenses = expenses.take(5).toList();
+
+                  if (recentExpenses.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No expenses added yet',
+                        style: GoogleFonts.inter(
+                          color: AppColor.lightGray,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 6.h,
+                    ),
+                    itemCount: recentExpenses.length,
+                    separatorBuilder: (_, __) => 12.verticalSpace,
+                    itemBuilder: (context, index) {
+                      final item = recentExpenses[index];
+                      return ExpenseDetailsWidget(
+                        amount: item.amount,
+                        category: item.category,
+                        note: item.note,
+                        createdAt: item.createdAt,
+                        updatedAt: item.updatedAt,
+                        onEdit: () {
+                          context.push(
+                            '/edit_expense',
+                            extra: {
+                              'id': item.expenseId,
+                              'amount': item.amount,
+                              'category': item.category,
+                              'note': item.note,
+                              'createdAt': item.createdAt,
+                              'updatedAt': item.updatedAt,
+                            },
+                          );
+                        },
+                        onDelete: () {
+                          _showDeleteDialog(context, ref, item.expenseId);
+                        },
+                      );
                     },
                   );
                 },
@@ -198,7 +293,9 @@ class HomePage extends ConsumerWidget {
                     color: AppColor.yellow.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                        color: AppColor.primary, width: 1.w),
+                      color: AppColor.primary,
+                      width: 1.w,
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
