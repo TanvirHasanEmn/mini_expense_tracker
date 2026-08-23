@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/validators.dart';
 import '../domain/add_expense_state.dart';
+import '../domain/expense_repo.dart';
 
 final addExpenseControllerProvider =
 StateNotifierProvider.autoDispose<AddExpenseController, AddExpenseState>((ref) {
-  return AddExpenseController();
+  final expenseRepo = ref.watch(expenseRepositoryProvider);
+  return AddExpenseController(expenseRepo);
 });
 
 class AddExpenseController extends StateNotifier<AddExpenseState> {
+  final ExpenseRepository _expenseRepository;
   final TextEditingController amountController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
 
-  AddExpenseController() : super(AddExpenseState(selectedDate: DateTime.now()));
+  AddExpenseController(this._expenseRepository)
+      : super(AddExpenseState(selectedDate: DateTime.now()));
 
   void selectCategory(String category) {
     state = state.copyWith(selectedCategory: category, categoryError: null);
@@ -25,7 +29,6 @@ class AddExpenseController extends StateNotifier<AddExpenseState> {
   Future<void> saveExpense() async {
     final amountText = amountController.text.trim();
     final note = noteController.text.trim();
-
 
     final amountError = AppValidators.validateAmount(amountText);
     final categoryError = AppValidators.validateCategory(state.selectedCategory);
@@ -48,12 +51,17 @@ class AddExpenseController extends StateNotifier<AddExpenseState> {
     );
 
     try {
-      await Future.delayed(const Duration(milliseconds: 800));
+      await _expenseRepository.addExpense(
+        amount: double.parse(amountText),
+        category: state.selectedCategory!,
+        note: note.isEmpty ? null : note,
+        date: state.selectedDate!,
+      );
       state = state.copyWith(isLoading: false, isSuccess: true);
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        generalError: e.toString(),
+        generalError: 'Failed to save expense. Please try again.',
         isSuccess: false,
       );
     }

@@ -51,13 +51,19 @@ class AddExpensePage extends ConsumerWidget {
           ),
         );
       }
-      if (next.isSuccess && !(previous?.isSuccess ?? false)) {
-        context.pop();
-      }
-    });
 
-    final formattedDate =
-        "${state.selectedDate?.day.toString().padLeft(2, '0')}/${state.selectedDate?.month.toString().padLeft(2, '0')}/${state.selectedDate?.year}";
+    if (next.isSuccess && !(previous?.isSuccess ?? false)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Expense added successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      context.pop();
+    }
+  });
+
 
     return Scaffold(
       backgroundColor: AppColor.black,
@@ -216,8 +222,9 @@ class AddExpensePage extends ConsumerWidget {
             30.verticalSpace,
 
             CustomButton(
-              text: state.isLoading ? 'Saving...' : 'Save Expense',
-              onPressed: state.isLoading ? null : controller.saveExpense,
+              text: 'Save Expense',
+              loading: state.isLoading,
+              onPressed: controller.saveExpense,
             ),
           ],
         ),

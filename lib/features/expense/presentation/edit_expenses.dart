@@ -57,6 +57,12 @@ class EditExpensePage extends ConsumerWidget {
         );
       }
       if (next.isSuccess && !(previous?.isSuccess ?? false)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Expense updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
         context.pop();
       }
     });
@@ -94,7 +100,7 @@ class EditExpensePage extends ConsumerWidget {
             TextField(
               controller: controller.amountController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              style: GoogleFonts.inter(fontSize: 15.sp, color:AppColor.white),
+              style: GoogleFonts.inter(fontSize: 15.sp, color: AppColor.white),
               decoration: _inputDecoration('e.g. 500', errorText: state.amountError),
             ),
             16.verticalSpace,
@@ -123,7 +129,7 @@ class EditExpensePage extends ConsumerWidget {
                 if (val != null) controller.selectCategory(val);
               },
               dropdownColor: const Color(0xFF1E1E1E),
-              icon: Icon(Icons.arrow_drop_down, color:AppColor.primary, size: 24.sp),
+              icon: Icon(Icons.arrow_drop_down, color: AppColor.primary, size: 24.sp),
               style: GoogleFonts.inter(fontSize: 15.sp, color: AppColor.white),
               decoration: _inputDecoration(
                 '',
@@ -148,7 +154,7 @@ class EditExpensePage extends ConsumerWidget {
                       border: Border.all(
                         color: state.dateError != null
                             ? AppColor.usRed
-                            :AppColor.primary,
+                            : AppColor.primary,
                       ),
                     ),
                     child: Row(
@@ -163,7 +169,7 @@ class EditExpensePage extends ConsumerWidget {
                         ),
                         Icon(
                           Icons.calendar_month_rounded,
-                          color:AppColor.primary,
+                          color: AppColor.primary,
                           size: 20.sp,
                         ),
                       ],
@@ -175,7 +181,7 @@ class EditExpensePage extends ConsumerWidget {
                       padding: EdgeInsets.only(left: 16.w),
                       child: Text(
                         state.dateError!,
-                        style: GoogleFonts.inter(color:AppColor.usRed, fontSize: 12.sp),
+                        style: GoogleFonts.inter(color: AppColor.usRed, fontSize: 12.sp),
                       ),
                     ),
                   ],
@@ -214,8 +220,9 @@ class EditExpensePage extends ConsumerWidget {
             30.verticalSpace,
 
             CustomButton(
-              text: state.isLoading ? 'Updating...' : 'Update Expense',
-              onPressed: state.isLoading ? null : controller.updateExpense,
+              text: 'Update Expense',
+              loading: state.isLoading,
+              onPressed: controller.updateExpense,
             ),
           ],
         ),
@@ -249,7 +256,7 @@ class EditExpensePage extends ConsumerWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(100.r),
-        borderSide: const BorderSide(color:AppColor.primary, width: 1.5),
+        borderSide: const BorderSide(color: AppColor.primary, width: 1.5),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(100.r),
