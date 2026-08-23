@@ -25,7 +25,15 @@ class SignupPage extends ConsumerWidget {
           ),
         );
       }
-      if (next.isSuccess) {
+
+      if (next.isSuccess && !(previous?.isSuccess ?? false)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account created successfully! Please sign in.'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.pop();
       }
     });
 
@@ -98,8 +106,9 @@ class SignupPage extends ConsumerWidget {
                 30.verticalSpace,
 
                 CustomButton(
-                  text: state.isLoading ? "Creating account..." : "Sign up",
-                  onPressed: state.isLoading ? null : controller.register,
+                  text: 'Sign Up',
+                  loading: state.isLoading,
+                  onPressed: controller.register,
                 ),
                 30.verticalSpace,
 

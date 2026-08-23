@@ -62,13 +62,11 @@ class SignupController extends StateNotifier<SignupState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        generalError: e.toString(),
+        generalError: 'Registration failed. This email may already be in use.',
         isSuccess: false,
       );
     }
   }
-
-
 
   @override
   void dispose() {

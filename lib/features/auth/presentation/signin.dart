@@ -23,6 +23,26 @@ class SigninPage extends ConsumerWidget {
         context.go(AppRoutes.home);
       }
     });
+    ref.listen(signinControllerProvider, (previous, next) {
+      if (next.generalError != null && next.generalError != previous?.generalError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.generalError!),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+
+    if (next.isSuccess && !(previous?.isSuccess ?? false)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Logged in successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  });
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -86,11 +106,13 @@ class SigninPage extends ConsumerWidget {
                 ),
 
                 30.verticalSpace,
-                CustomButton(
 
-                  text: state.isLoading ? "Signing in..." : "Sign in",
-                  onPressed: state.isLoading ? null : controller.login,
-                ),
+
+                  CustomButton(
+                    text: 'Sign In',
+                    loading: state.isLoading,
+                    onPressed: controller.login,
+                  ),
 
 
                 50.verticalSpace,

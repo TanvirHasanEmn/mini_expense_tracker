@@ -57,7 +57,7 @@ class SigninController extends StateNotifier<SigninState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        generalError: e.toString(),
+        generalError: 'Invalid email or password.',
         isSuccess: false,
       );
     }
