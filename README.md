@@ -7,7 +7,7 @@ A clean, responsive cross-platform Flutter application designed to track and man
 ##  Demonstration & Download
 
 * **Download Demo APK**: [Click here to download APK](https://drive.google.com/file/d/15F0MaByKVkq8R3il-g_brc9PSooXWwbX/view?usp=sharing)
-* **YouTube Walkthrough**: [Click here to watch video](https://youtu.be/tu_UOoUM8ag?si=IaCStlK70CHvyfOd)
+* **Demonstration**: [Click here to watch video](https://drive.google.com/file/d/1aJueRArVoRiVpV0w6xLF-cUmaEEC4Dz0/view?usp=sharing)
 
 ---
 
