@@ -4,14 +4,14 @@ A clean, responsive cross-platform Flutter application designed to track and man
 
 ---
 
-## 📱 Demonstration & Download
+##  Demonstration & Download
 
 * **Download Demo APK**: [Click here to download APK](https://drive.google.com/file/d/15F0MaByKVkq8R3il-g_brc9PSooXWwbX/view?usp=sharing)
 * **YouTube Walkthrough**: [Click here to watch video](YOUR_YOUTUBE_LINK_HERE)
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 * Flutter SDK (3.x or later)
